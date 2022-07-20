@@ -81,7 +81,7 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
     Clipboard.setData(ClipboardData(text: shortUrl)).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Short link copied to clipboard"),
+          content: Text(constants.UrlShortnerConstants.copyToastText),
         ),
       );
     });

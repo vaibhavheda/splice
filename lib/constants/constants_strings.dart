@@ -13,4 +13,5 @@ class UrlShortnerConstants {
   static const urlInputLablePrefix = "https://";
   static const generateUrlButton = "Splice URL";
   static const copyToClipboard = "Copy to Clipboard";
+  static const copyToastText = "Short link copied to clipboard";
 }
