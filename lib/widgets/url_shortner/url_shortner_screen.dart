@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:ffi';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -29,7 +30,6 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
   late String shortUrl;
   @override
   void initState() {
-    // TODO: implement initState
     shortUrl = "";
     _urlInputController.addListener(() {
       // Remove the prefix of https://
@@ -38,9 +38,6 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
       // save the new value
       _urlInputController.value = _urlInputController.value.copyWith(
         text: newText,
-        selection: TextSelection(
-            baseOffset: newText.length, extentOffset: newText.length),
-        composing: TextRange.empty,
       );
     });
     super.initState();
@@ -80,6 +77,16 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
     if (_urlInputController.text != "") _shortenURL();
   }
 
+  handleCopyToClipboard() {
+    Clipboard.setData(ClipboardData(text: shortUrl)).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Short link copied to clipboard"),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -87,13 +94,20 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
       builder: (context, snapshot) {
         return Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextFormField(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: TextField(
+                enableInteractiveSelection: true,
                 decoration: const InputDecoration(
                   prefixText:
                       constants.UrlShortnerConstants.urlInputLablePrefix,
-                  border: UnderlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.all(20),
                   labelText: constants.UrlShortnerConstants.urlInputLabelText,
                 ),
                 controller: _urlInputController,
@@ -101,10 +115,69 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
             ),
             TextButton(
               onPressed: handleClick,
-              child:
-                  const Text(constants.UrlShortnerConstants.generateUrlButton),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.blueAccent,
+                ),
+                foregroundColor: MaterialStateProperty.all(
+                  Colors.white,
+                ),
+                // overlayColor: MaterialStateProperty.all(Colors.red),
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
+                ),
+              ),
+              child: const Text(
+                constants.UrlShortnerConstants.generateUrlButton,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
-            Text(shortUrl)
+            Container(
+              margin: const EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 10,
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 20,
+              ),
+              child: Text(
+                shortUrl,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextButton.icon(
+              onPressed: handleCopyToClipboard,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.blueAccent,
+                ),
+                foregroundColor: MaterialStateProperty.all(
+                  Colors.white,
+                ),
+                // overlayColor: MaterialStateProperty.all(Colors.red),
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
+                ),
+              ),
+              icon: const Icon(
+                Icons.copy_rounded,
+                size: 24.0,
+              ),
+              label: const Text(
+                constants.UrlShortnerConstants.copyToClipboard,
+              ),
+            ),
           ],
         );
       },

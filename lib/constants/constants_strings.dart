@@ -12,4 +12,5 @@ class UrlShortnerConstants {
   static const urlInputLabelText = "Enter an URL";
   static const urlInputLablePrefix = "https://";
   static const generateUrlButton = "Splice URL";
+  static const copyToClipboard = "Copy to Clipboard";
 }
