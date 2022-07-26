@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:ffi';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:splice/widgets/url_shortner/url_shortner_service.dart';
+import 'package:splice/models/short_url_output_model.dart';
+import 'package:splice/widgets/error/error_screen_Api.dart';
+import 'package:splice/widgets/url_shortner_output/url_shortner_output.dart';
 
 import 'package:http/http.dart' as http;
 import '../../auth/secrets.dart' as config;
@@ -16,6 +13,10 @@ import '../../constants/constants_strings.dart' as constants;
   then a button to shorten the URL.
  */
 class URLShortnerScreen extends StatefulWidget {
+  /*
+    Route Name: URL Shortner Output
+  */
+  static const routeName = "/urlShortHome";
   const URLShortnerScreen({Key? key}) : super(key: key);
 
   @override
@@ -23,14 +24,18 @@ class URLShortnerScreen extends StatefulWidget {
 }
 
 class _URLShortnerScreenState extends State<URLShortnerScreen> {
+  bool isLoading = false;
   /*
   Controller for the input field
   */
   final TextEditingController _urlInputController = TextEditingController();
-  late String shortUrl;
+
+  /*
+    Set initial state
+  */
   @override
   void initState() {
-    shortUrl = "";
+    // initial value of the short URL;
     _urlInputController.addListener(() {
       // Remove the prefix of https://
       final String newText = _urlInputController.text.replaceFirst(
@@ -43,144 +48,153 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
     super.initState();
   }
 
+  /* Dispose the controller. */
   @override
   void dispose() {
     _urlInputController.dispose();
     super.dispose();
   }
 
-  _shortenURL() async {
+  Future _shortenURL() async {
     try {
       String longUrl = _urlInputController.text;
+      // Call the cuttly API
       var url =
           "https://cutt.ly/api/api.php?key=${config.APIKeys.cuttlyApiKey}&short=$longUrl";
+      // parse the URL
       final response = await http.get(Uri.parse(url));
       final json = jsonDecode(response.body);
-      if (json['url']['shortLink'] != null) {
-        setState(() {
-          shortUrl = json['url']['shortLink'];
-          _urlInputController.clear();
-        });
-        debugPrint(json['url']['shortLink']);
-      }
-      // if (json.url.status == 7)
-      // setState(() {
-      //   shortUrl:
-
-      // });
+      return json;
     } catch (err) {
-      debugPrint("Error: Fetching Short link failure ,${err}");
+      // Handle the errors.
+      debugPrint("Error: Fetching Short link failure,$err");
+      return null;
     }
   }
 
-  handleClick() {
-    if (_urlInputController.text != "") _shortenURL();
-  }
+  /*  
+    Function to handle click on the button to shorten the URL.
+  */
+  _handleClick() {
+    // If the input url is valid then show allow the button click.
 
-  handleCopyToClipboard() {
-    Clipboard.setData(ClipboardData(text: shortUrl)).then((_) {
+    if (_urlInputController.text != "") {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        _shortenURL().then(
+          /*
+            After await go for output screen.
+           */
+          (value) => {
+            setState(() {
+              isLoading = false;
+            }),
+            _urlInputController.text = "",
+            if (value != null && value['url']['shortLink'] != null)
+              {
+                Navigator.pushNamed(
+                  context,
+                  UrlShortnerOutput.routeName,
+                  arguments: UrlShortnerOutputModel(value['url']['shortLink']),
+                )
+              }
+            else
+              {
+                Navigator.pushNamed(
+                  context,
+                  ErrorScreenAPI.routeName,
+                )
+              }
+          },
+        );
+      } catch (err) {
+        debugPrint("Error: Fetching Short link failure,$err");
+        Navigator.pushNamed(
+          context,
+          ErrorScreenAPI.routeName,
+        );
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(constants.UrlShortnerConstants.copyToastText),
+          margin: EdgeInsets.all(16),
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            "Enter a valid url",
+          ),
         ),
       );
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _shortenURL(),
-      builder: (context, snapshot) {
-        return Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextField(
-                enableInteractiveSelection: true,
-                decoration: const InputDecoration(
-                  prefixText:
-                      constants.UrlShortnerConstants.urlInputLablePrefix,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(constants.AppConstants.appNameTitle),
+        elevation: 0,
+        backgroundColor: Theme.of(context).canvasColor,
+      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Center(
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: TextField(
+                      enableInteractiveSelection: true,
+                      decoration: const InputDecoration(
+                        prefixText:
+                            constants.UrlShortnerConstants.urlInputLablePrefix,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.all(20),
+                        labelText:
+                            constants.UrlShortnerConstants.urlInputLabelText,
+                      ),
+                      controller: _urlInputController,
                     ),
                   ),
-                  contentPadding: EdgeInsets.all(20),
-                  labelText: constants.UrlShortnerConstants.urlInputLabelText,
-                ),
-                controller: _urlInputController,
-              ),
-            ),
-            TextButton(
-              onPressed: handleClick,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Colors.blueAccent,
-                ),
-                foregroundColor: MaterialStateProperty.all(
-                  Colors.white,
-                ),
-                // overlayColor: MaterialStateProperty.all(Colors.red),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
+                  TextButton(
+                    onPressed: _handleClick,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.blueAccent,
+                      ),
+                      foregroundColor: MaterialStateProperty.all(
+                        Colors.white,
+                      ),
+                      // overlayColor: MaterialStateProperty.all(Colors.red),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 20,
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      constants.UrlShortnerConstants.generateUrlButton,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              child: const Text(
-                constants.UrlShortnerConstants.generateUrlButton,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+                ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 5,
-                horizontal: 10,
-              ),
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 20,
-              ),
-              child: Text(
-                shortUrl,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextButton.icon(
-              onPressed: handleCopyToClipboard,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Colors.blueAccent,
-                ),
-                foregroundColor: MaterialStateProperty.all(
-                  Colors.white,
-                ),
-                // overlayColor: MaterialStateProperty.all(Colors.red),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                ),
-              ),
-              icon: const Icon(
-                Icons.copy_rounded,
-                size: 24.0,
-              ),
-              label: const Text(
-                constants.UrlShortnerConstants.copyToClipboard,
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }
