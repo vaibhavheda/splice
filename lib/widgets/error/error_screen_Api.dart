@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
-import '../home/home_screen.dart';
 
 class ErrorScreenAPI extends StatefulWidget {
   /*
@@ -32,9 +28,39 @@ class _ErrorScreenAPIState extends State<ErrorScreenAPI> {
         title: Text("Error"),
       ),
       body: SafeArea(
-        child: Container(
-          child: Text(
-            "Error!!!",
+        child: SingleChildScrollView(
+          child: Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 50.0,
+                ),
+                Card(
+                  color: Theme.of(context).canvasColor,
+                  elevation: 0,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 52.0,
+                    vertical: 8.0,
+                  ),
+                  child: Image.asset(
+                    'assets/images/error.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                const Card(
+                  elevation: 0,
+                  child: Text(
+                    "Boooh! Something spilled over.",
+                    style: TextStyle(fontSize: 24.0),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
