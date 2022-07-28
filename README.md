@@ -5,7 +5,7 @@ A new flutter app used for slicing the url using cutt.ly
 - From Home screen select button to splice the url, Paste the URL into the input box anc click on button.
 - Click on url to copy it to clipboard.
 
-![alt text][SpliceApp]
+![alt text](https://github.com/vaibhavheda/splice/blob/master/SpliceApp.gif "Splice App")
 
 ### Let me know if any impovement you can suggest
 
@@ -21,6 +21,3 @@ To use the code
 ---
 ## API Limitation
 - Free plan of cutt.ly only allows 6 API calls/min
-
-
-[SpliceApp] : https://github.com/vaibhavheda/splice/blob/master/SpliceApp.gif "App Image"
