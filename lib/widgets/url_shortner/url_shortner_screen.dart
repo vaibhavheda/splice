@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:splice/common/snackbar_custom.dart';
 import 'package:splice/models/short_url_output_model.dart';
-import 'package:splice/widgets/error/error_screen_Api.dart';
+import 'package:splice/widgets/error/error_screen_api.dart';
 import 'package:splice/widgets/url_shortner_output/url_shortner_output.dart';
 
 import 'package:http/http.dart' as http;
@@ -90,7 +90,7 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
     if (_urlInputController.text != "") {
       try {
         // validate URL
-        bool isValidUrl = validateUrl('https://${_urlInputController.text}/');
+        bool isValidUrl = validateUrl('https://${_urlInputController.text}');
         // If valid url
         if (isValidUrl == true) {
           // Show loader

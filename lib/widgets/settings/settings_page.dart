@@ -56,22 +56,26 @@ class _SlicePreferencesState extends State<SlicePreferences> {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.text_fields_rounded),
-                      title: Text("Change Name"),
-                      trailing: Icon(Icons.keyboard_arrow_right),
-                      onTap: () {},
+                      leading: const Icon(Icons.text_fields_rounded),
+                      title: const Text("Change Name"),
+                      trailing: const Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        //do nothing
+                      },
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
                       width: double.infinity,
                       height: 1.0,
                       color: Colors.grey.shade300,
                     ),
                     ListTile(
-                      leading: Icon(Icons.near_me),
-                      title: Text("Change Location"),
-                      trailing: Icon(Icons.keyboard_arrow_right),
-                      onTap: () {},
+                      leading: const Icon(Icons.near_me),
+                      title: const Text("Change Location"),
+                      trailing: const Icon(Icons.keyboard_arrow_right),
+                      onTap: () {
+                        // do nothing
+                      },
                     ),
                   ],
                 ),
@@ -96,7 +100,7 @@ class _SlicePreferencesState extends State<SlicePreferences> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: SwitchListTile(
-                  title: Text(
+                  title: const Text(
                     "Dark Mode",
                   ),
                   activeColor: Colors.purple,

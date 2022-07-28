@@ -21,7 +21,9 @@ class UrlShortnerConstants {
   Below are the theme strings.
 */
 class ThemeNames {
+  // ignore: constant_identifier_names
   static const DARK = 'DARK';
+  // ignore: constant_identifier_names
   static const LIGHT = 'LIGHT';
 }
 

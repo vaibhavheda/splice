@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:splice/utils/storage_manager/storage_manager.dart';
 import 'package:splice/widgets/settings/settings_page.dart';
 import 'package:splice/widgets/url_shortner/url_shortner_screen.dart';
 
@@ -32,10 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             ListTile(
               title: const Text(constants.AppSettingStrings.themes),
-              trailing: ToggleButtons(
-                isSelected: [],
-                children: [],
-              ),
               onTap: () {
                 // Update the state of the app
                 // ...

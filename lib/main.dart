@@ -5,7 +5,7 @@ import 'package:splice/widgets/settings/settings_page.dart';
 import 'package:splice/widgets/url_shortner/url_shortner_screen.dart';
 import 'package:splice/widgets/url_shortner_output/url_shortner_output.dart';
 import 'utils/themes/theme_manager.dart';
-import 'widgets/error/error_screen_Api.dart';
+import 'widgets/error/error_screen_api.dart';
 
 void main() {
   const homePageRoute = URLShortnerScreen.routeName;

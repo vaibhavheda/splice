@@ -8,8 +8,6 @@ class Themes {
     primaryColor: Colors.white,
     brightness: Brightness.light,
     backgroundColor: const Color(0xFFE5E5E5),
-    accentColor: Colors.black,
-    accentIconTheme: IconThemeData(color: Colors.white),
     dividerColor: Colors.white54,
   );
 
@@ -20,8 +18,6 @@ class Themes {
       primaryColor: Colors.white,
       brightness: Brightness.dark,
       backgroundColor: const Color(0xFF212121),
-      accentColor: Colors.white,
-      accentIconTheme: IconThemeData(color: Colors.black),
       dividerColor: Colors.black12,
     ),
     ThemeNames.LIGHT: ThemeData(
@@ -29,8 +25,6 @@ class Themes {
       primaryColor: Colors.black,
       brightness: Brightness.light,
       backgroundColor: const Color(0xFFE5E5E5),
-      accentColor: Colors.black,
-      accentIconTheme: IconThemeData(color: Colors.white),
       dividerColor: Colors.white54,
     )
   };
@@ -49,21 +43,8 @@ class ThemeNotifier with ChangeNotifier {
     StorageManager.readData(
       StorageManagerStrings.themeMode,
     ).then((value) {
-      print('value read from storage: ' +
-          StorageManagerStrings.themeMode +
-          " " +
-          value.toString());
       var themeMode = value ?? ThemeNames.LIGHT;
       setTheme(themeMode);
-      // if (themeMode == 'light') {
-      //   _themeData = themesObject.getThemeData();
-      //   setLightMode();
-      // } else {
-      //   print('setting dark theme');
-      //   _themeData = darkTheme;
-      //   setDarkMode();
-      // }
-      // notifyListeners();
     });
   }
 
@@ -72,16 +53,4 @@ class ThemeNotifier with ChangeNotifier {
     StorageManager.saveData(StorageManagerStrings.themeMode, newTheme);
     notifyListeners();
   }
-
-  // void setDarkMode() async {
-  //   _themeData = darkTheme;
-  //   StorageManager.saveData('themeMode', 'dark');
-  //   notifyListeners();
-  // }
-
-  // void setLightMode() async {
-  //   _themeData = lightTheme;
-  //   StorageManager.saveData('themeMode', 'light');
-  //   notifyListeners();
-  // }
 }
