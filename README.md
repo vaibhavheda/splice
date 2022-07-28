@@ -1,16 +1,23 @@
-# splice
+# Splice
 
-A new Flutter project.
+A new flutter app used for slicing the url using cutt.ly 
+- Added button to toggle between dark and light theme.
+- From Home screen select button to splice the url, Paste the URL into the input box anc click on button.
+- Click on url to copy it to clipboard.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+---
+## Installation
 
-A few resources to get you started if this is your first Flutter project:
+To use the code 
+- Install flutter
+- Clone the code repository
+- Run flutter pub install
+- Goto /lib/auth/dummy_secrets and follow the instruction to add your API key for the cutt.ly
+    
+---
+## API Limitation
+- Free plan of cutt.ly only allows 6 API calls/min
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[SpliceApp]:SpliceApp.gif "App Image"
