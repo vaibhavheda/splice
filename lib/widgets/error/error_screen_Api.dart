@@ -23,44 +23,42 @@ class _ErrorScreenAPIState extends State<ErrorScreenAPI> {
           onPressed: () {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
-          icon: Icon(Icons.home_outlined),
+          icon: const Icon(Icons.home_outlined),
         ),
-        title: Text("Error"),
+        title: const Text(""),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 50.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 50.0,
+              ),
+              Card(
+                color: Theme.of(context).canvasColor,
+                elevation: 0,
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 52.0,
+                  vertical: 8.0,
                 ),
-                Card(
-                  color: Theme.of(context).canvasColor,
-                  elevation: 0,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 52.0,
-                    vertical: 8.0,
-                  ),
-                  child: Image.asset(
-                    'assets/images/error.png',
-                    fit: BoxFit.contain,
-                  ),
+                child: Image.asset(
+                  'assets/images/error.png',
+                  fit: BoxFit.contain,
                 ),
-                const SizedBox(
-                  height: 10.0,
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              const Card(
+                elevation: 0,
+                child: Text(
+                  "Boooh! Something spilled over.",
+                  style: TextStyle(fontSize: 24.0),
                 ),
-                const Card(
-                  elevation: 0,
-                  child: Text(
-                    "Boooh! Something spilled over.",
-                    style: TextStyle(fontSize: 24.0),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

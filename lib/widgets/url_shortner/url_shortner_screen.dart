@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:splice/common/snackbar_custom.dart';
 import 'package:splice/models/short_url_output_model.dart';
 import 'package:splice/widgets/error/error_screen_Api.dart';
 import 'package:splice/widgets/url_shortner_output/url_shortner_output.dart';
@@ -72,43 +73,62 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
     }
   }
 
+  void _showSnackBarMessage(String message) {
+    showSnackBarCustom(context, message);
+  }
+
+  bool validateUrl(String url) {
+    return Uri.tryParse(url)?.hasAbsolutePath ?? false;
+  }
+
   /*  
     Function to handle click on the button to shorten the URL.
   */
-  _handleClick() {
+  void _handleClick() {
     // If the input url is valid then show allow the button click.
 
     if (_urlInputController.text != "") {
-      setState(() {
-        isLoading = true;
-      });
       try {
-        _shortenURL().then(
-          /*
+        // validate URL
+        bool isValidUrl = validateUrl('https://${_urlInputController.text}/');
+        // If valid url
+        if (isValidUrl == true) {
+          // Show loader
+          setState(() {
+            isLoading = true;
+          });
+          // shorten the URL
+          _shortenURL().then(
+            /*
             After await go for output screen.
            */
-          (value) => {
-            setState(() {
-              isLoading = false;
-            }),
-            _urlInputController.text = "",
-            if (value != null && value['url']['shortLink'] != null)
-              {
-                Navigator.pushNamed(
-                  context,
-                  UrlShortnerOutput.routeName,
-                  arguments: UrlShortnerOutputModel(value['url']['shortLink']),
-                )
-              }
-            else
-              {
-                Navigator.pushNamed(
-                  context,
-                  ErrorScreenAPI.routeName,
-                )
-              }
-          },
-        );
+            (value) => {
+              setState(() {
+                isLoading = false;
+              }),
+              _urlInputController.text = "",
+              if (value != null && value['url']['shortLink'] != null)
+                {
+                  Navigator.pushNamed(
+                    context,
+                    UrlShortnerOutput.routeName,
+                    arguments:
+                        UrlShortnerOutputModel(value['url']['shortLink']),
+                  )
+                }
+              else
+                {
+                  Navigator.pushNamed(
+                    context,
+                    ErrorScreenAPI.routeName,
+                  )
+                }
+            },
+          );
+        } else {
+          // If not valid then show the error
+          _showSnackBarMessage("Enter a valid URL");
+        }
       } catch (err) {
         debugPrint("Error: Fetching Short link failure,$err");
         Navigator.pushNamed(
@@ -117,15 +137,7 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
         );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          margin: EdgeInsets.all(16),
-          behavior: SnackBarBehavior.floating,
-          content: Text(
-            "Enter a valid url",
-          ),
-        ),
-      );
+      _showSnackBarMessage("Url cannot be empty");
     }
   }
 
@@ -135,7 +147,7 @@ class _URLShortnerScreenState extends State<URLShortnerScreen> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(constants.AppConstants.appNameTitle),
+        title: const Text(""),
         elevation: 0,
         backgroundColor: Theme.of(context).canvasColor,
       ),

@@ -37,7 +37,7 @@ class _UrlShortnerOutputState extends State<UrlShortnerOutput> {
         ModalRoute.of(context)!.settings.arguments as UrlShortnerOutputModel;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Second Screen'),
+        title: const Text(''),
         elevation: 0,
         backgroundColor: Theme.of(context).canvasColor,
       ),
